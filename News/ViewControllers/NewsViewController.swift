@@ -39,6 +39,7 @@ class NewsViewController: UIViewController {
     
     private func setupUI(){
         view.backgroundColor = .systemBackground
+        
         title = "News"
         tableView.delegate = self
         tableView.dataSource = self
@@ -67,6 +68,11 @@ class NewsViewController: UIViewController {
             DispatchQueue.main.async {
                 guard let news = self.viewModel.newHeadlines?.articles else{return}
                 self.articles.append(contentsOf: news)
+                RealmManager.shared.deleteDatafromCashed()
+                for each in self.articles{
+                    let obj = RealmManager.shared.createArticleToRealmCashedObject(article: each)
+                    RealmManager.shared.add(object: obj)
+                }
                 self.tableView.refreshControl?.endRefreshing()
                 self.tableView.reloadData()
                 print("Updated")
@@ -98,6 +104,14 @@ class NewsViewController: UIViewController {
         }
         reachability.whenUnreachable = {[weak self] _ in
             self?.alertUserNetworkInError(message: "Please check Your Internet Connection")
+            
+            let cashedArticles = RealmManager.shared.getAllObjects(ArticleToRealmCashed.self)
+            self?.articles.removeAll()
+            for each in cashedArticles{
+                let article = Article(author: each.author, content: each.content, description: each.articleDescription, publishedAt: each.publishedAt, source: nil, title: each.title, url: each.url, urlToImage: each.urlToImage)
+                self?.articles.append(article)
+            }
+            self?.tableView.reloadData()
         }
         do{
             try reachability.startNotifier()
@@ -115,6 +129,7 @@ class NewsViewController: UIViewController {
     
     @objc func refreshTable() {
         fetchData()
+     
     }
     
     private func createSearchBar(){
@@ -146,14 +161,16 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
         }
         if savedTitle == article.title{
             cell.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            cell.likeButton.tintColor = .systemRed
             cell.exist = true
         }else{
             cell.likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            cell.likeButton.tintColor = .systemRed
             cell.exist = false
         }
         self.savedTitle = ""
         
-        let obj = RealmManager.shared.createObject(article: article)
+        let obj = RealmManager.shared.createArticleToRealmFavoritesObject(article: article)
         
         cell.bindAddToFavoritesView = { [weak self] in
             guard let _ = self else {return}

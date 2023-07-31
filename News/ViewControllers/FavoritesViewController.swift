@@ -11,7 +11,7 @@ class FavoritesViewController: UIViewController {
 
     @IBOutlet weak var placeHolderLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
-    var favArticlesArray:[ArticleToRealm] = []
+    var favArticlesArray:[ArticleToRealmFavorites] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,7 @@ class FavoritesViewController: UIViewController {
     
     
     func loadDatafromRealm(){
-        let articles = RealmManager.shared.getAllObjects(ArticleToRealm.self)
+        let articles = RealmManager.shared.getAllObjects(ArticleToRealmFavorites.self)
         favArticlesArray.removeAll()
         for each in articles{
             favArticlesArray.append(each)
@@ -65,6 +65,7 @@ extension FavoritesViewController:UITableViewDelegate,UITableViewDataSource{
         
         cell.configure(model: article,Source: savedArticle.source)
         cell.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        cell.likeButton.tintColor = .systemRed
         cell.exist = true
         
         cell.bindDeleteToFavoritesView = { [weak self] in

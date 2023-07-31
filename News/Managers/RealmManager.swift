@@ -24,8 +24,22 @@ class RealmManager {
         }
     }
     
-    func createObject(article:Article) -> ArticleToRealm{
-        let obj = ArticleToRealm()
+    func createArticleToRealmFavoritesObject(article:Article) -> ArticleToRealmFavorites{
+        let obj = ArticleToRealmFavorites()
+        obj.author = article.author
+        obj.content = article.content
+        obj.articleDescription = article.description
+        obj.publishedAt = article.publishedAt
+        obj.source = article.source?["name"] as? String ?? ""
+        obj.title = article.title
+        obj.url = article.url
+        obj.urlToImage = article.urlToImage
+        
+        return obj
+    }
+    
+    func createArticleToRealmCashedObject(article:Article) -> ArticleToRealmCashed{
+        let obj = ArticleToRealmCashed()
         obj.author = article.author
         obj.content = article.content
         obj.articleDescription = article.description
@@ -63,14 +77,22 @@ class RealmManager {
     }*/
     
     func deleteDatafromFavorites(title:String){
-        let delProduct = try! Realm().objects(ArticleToRealm.self).filter("title == %@",title)
+        let delProduct = try! Realm().objects(ArticleToRealmFavorites.self).filter("title == %@",title)
          try! Realm().write({
              try! Realm().delete(delProduct)
          })
     }
     
-    func getObject(title:String) -> Results<ArticleToRealm>{
-        let object = try! Realm().objects(ArticleToRealm.self).filter("title == %@",title)
+    
+    func deleteDatafromCashed(){
+        let delProduct = try! Realm().objects(ArticleToRealmCashed.self)
+         try! Realm().write({
+             try! Realm().delete(delProduct)
+         })
+    }
+    
+    func getObject(title:String) -> Results<ArticleToRealmFavorites>{
+        let object = try! Realm().objects(ArticleToRealmFavorites.self).filter("title == %@",title)
         return object
     }
     

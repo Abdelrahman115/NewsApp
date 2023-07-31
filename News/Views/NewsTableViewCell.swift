@@ -112,10 +112,11 @@ class NewsTableViewCell: UITableViewCell {
     @objc func didTapLikeButton(){
         if exist{
             likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            likeButton.tintColor = .systemRed
             bindDeleteToFavoritesView!()
         }else{
            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-           likeButton.tintColor = .label
+           likeButton.tintColor = .systemRed
            bindAddToFavoritesView!()
            
        }

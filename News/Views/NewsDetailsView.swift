@@ -107,7 +107,7 @@ class NewsDetailsView: UIView {
            let button = UIButton()
            button.translatesAutoresizingMaskIntoConstraints = false
            button.setTitle("Continue Reading", for: .normal)
-           button.setTitleColor(.systemBlue, for: .normal)
+           button.setTitleColor(.systemRed, for: .normal)
            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(continueReadingButtonTapped), for: .touchUpInside)
        // button.addTarget(NewsDetailsView.self, action: #selector(continueReadingButtonTapped), for: .touchUpInside)

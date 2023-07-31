@@ -38,17 +38,18 @@ class NewsDetailsViewController: UIViewController {
     
     private func setuoUI(){
         // Instantiate the custom NewsDetailsView
-               newsDetailsView = NewsDetailsView()
-               newsDetailsView.translatesAutoresizingMaskIntoConstraints = false
-               view.addSubview(newsDetailsView)
+        navigationItem.leftBarButtonItem?.tintColor = UIColor.red
+        newsDetailsView = NewsDetailsView()
+        newsDetailsView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(newsDetailsView)
 
-               // Set constraints for the NewsDetailsView
-               NSLayoutConstraint.activate([
-                   newsDetailsView.topAnchor.constraint(equalTo: view.topAnchor),
-                   newsDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                   newsDetailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                   newsDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-               ])
+        // Set constraints for the NewsDetailsView
+        NSLayoutConstraint.activate([
+            newsDetailsView.topAnchor.constraint(equalTo: view.topAnchor),
+            newsDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            newsDetailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            newsDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
         newsDetailsView.delegate = self
     }
     
