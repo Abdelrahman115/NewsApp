@@ -204,7 +204,7 @@ class NewsDetailsView: UIView {
         descriptionLabel.text = article.description
         contentLabel.text = article.content
         let imageUrl = URL(string: article.urlToImage ?? "" )
-        imageView.kf.setImage(with: imageUrl)
+        imageView.kf.setImage(with: imageUrl,placeholder: UIImage(named: "noImage"))
         
         sourceLabel.text = "Source: \(source)"
         publishedAtLabel.text = "Published at: \(article.publishedAt ?? "")"

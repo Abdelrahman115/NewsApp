@@ -103,7 +103,7 @@ class NewsTableViewCell: UITableViewCell {
         source.text = Source ?? ""
         publishDate.text = model.publishedAt
         let imageUrl = URL(string: model.urlToImage ?? "" )
-        newsImageView.kf.setImage(with: imageUrl)
+        newsImageView.kf.setImage(with: imageUrl,placeholder: UIImage(named: "noImage"))
         
         //cell..kf.setImage(with: brandImageUrl)
     }

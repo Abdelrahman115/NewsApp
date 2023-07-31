@@ -7,14 +7,16 @@
 
 import UIKit
 import SafariServices
+import Reachability
 
 class NewsViewController: UIViewController {
     
     @IBOutlet weak var themeSelector: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     
+    let reachability = try! Reachability()
     
-    
+    private let searchVC = UISearchController(searchResultsController: nil)
     var viewModel:FetchNews!
     var articles:[Article] = []
     var savedTitle:String = ""
@@ -23,14 +25,15 @@ class NewsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchData()
+        //fetchData()
+        checkConnection()
+        createSearchBar()
+        //fetchSearchResults(query: "America")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        
-        
     }
     
     
@@ -71,12 +74,52 @@ class NewsViewController: UIViewController {
         }
     }
     
+    
+    private func fetchSearchResults(query:String){
+        articles.removeAll()
+        viewModel = FetchNews()
+        viewModel.fetchSearchResults(query: query)
+        viewModel.bindNews = {[weak self] in
+            guard let self = self else {return}
+            DispatchQueue.main.async {
+                guard let news = self.viewModel.newHeadlines?.articles else{return}
+                self.articles.append(contentsOf: news)
+                self.tableView.refreshControl?.endRefreshing()
+                self.tableView.reloadData()
+                print("Updated")
+            }
+        }
+    }
+    
+    
+    func checkConnection(){
+        reachability.whenReachable = {[weak self] reachability in
+            self?.fetchData()
+        }
+        reachability.whenUnreachable = {[weak self] _ in
+            self?.alertUserNetworkInError(message: "Please check Your Internet Connection")
+        }
+        do{
+            try reachability.startNotifier()
+        }catch{
+            print("aa")
+        }
+    }
+    
+    func alertUserNetworkInError(message:String){
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        
+        present(alert,animated: true)
+    }
+    
     @objc func refreshTable() {
         fetchData()
     }
     
-    @objc func didTapSetting() {
-            
+    private func createSearchBar(){
+        navigationItem.searchController = searchVC
+        searchVC.searchBar.delegate = self
     }
 }
 
@@ -137,6 +180,18 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 340
+    }
+}
+
+
+extension NewsViewController:UISearchBarDelegate{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text, !text.isEmpty else {return}
+        fetchSearchResults(query: text)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        fetchData()
     }
 }
 

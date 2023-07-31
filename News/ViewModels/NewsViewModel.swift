@@ -29,5 +29,17 @@ class FetchNews{
         }
     }
     
+    func fetchSearchResults(query:String){
+        NetworkManager.shared.search(q: query) { [weak self] result in
+            guard let self = self else {return}
+            switch result{
+            case.success(let model):
+                self.newHeadlines = model
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     
 }
