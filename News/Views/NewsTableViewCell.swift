@@ -44,7 +44,7 @@ class NewsTableViewCell: UITableViewCell {
     
     let newsImageView:UIImageView = {
        let image = UIImageView()
-        image.backgroundColor = .systemRed
+        image.backgroundColor = .systemBackground
         image.contentMode = .scaleToFill
         image.layer.masksToBounds = true
         image.layer.cornerRadius = 20

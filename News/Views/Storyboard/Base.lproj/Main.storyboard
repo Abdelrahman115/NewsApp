@@ -30,9 +30,24 @@
                             <constraint firstItem="Aqo-8K-wEE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="smw-Cb-1zk"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="kU6-kJ-nna"/>
+                    <navigationItem key="navigationItem" id="kU6-kJ-nna">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="kL5-mq-VXn">
+                            <rect key="frame" x="104" y="5.6666666666666679" width="185" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="Device"/>
+                                <segment title="Light"/>
+                                <segment title="Dark"/>
+                            </segments>
+                            <connections>
+                                <action selector="themeSelector:" destination="BYZ-38-t0r" eventType="valueChanged" id="YG5-Np-kQQ"/>
+                            </connections>
+                        </segmentedControl>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="Aqo-8K-wEE" id="nXt-lO-xoc"/>
+                        <outlet property="themeSelector" destination="kL5-mq-VXn" id="QYw-So-0CK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

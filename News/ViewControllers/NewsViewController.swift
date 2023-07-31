@@ -10,10 +10,15 @@ import SafariServices
 
 class NewsViewController: UIViewController {
     
+    @IBOutlet weak var themeSelector: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
+    
+    
+    
     var viewModel:FetchNews!
     var articles:[Article] = []
     var savedTitle:String = ""
+    //let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +29,8 @@ class NewsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+        
+        
     }
     
     
@@ -33,10 +40,23 @@ class NewsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: NewsTableViewCell.identifier)
-    }
+        
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refreshTable), for: .valueChanged)
+        
+        themeSelector.selectedSegmentIndex = MTUserDefaults.shared.theme.rawValue
 
+        
+    }
+    
+    
+    @IBAction func themeSelector(_ sender: UISegmentedControl) {
+        MTUserDefaults.shared.theme = Theme(rawValue: sender.selectedSegmentIndex) ?? .device
+        self.view.window?.overrideUserInterfaceStyle = MTUserDefaults.shared.theme.getUserInterfaceStyle()
+    }
     
     private func fetchData(){
+        articles.removeAll()
         viewModel = FetchNews()
         viewModel.fetchNewHeadLines()
         viewModel.bindNews = {[weak self] in
@@ -44,9 +64,19 @@ class NewsViewController: UIViewController {
             DispatchQueue.main.async {
                 guard let news = self.viewModel.newHeadlines?.articles else{return}
                 self.articles.append(contentsOf: news)
+                self.tableView.refreshControl?.endRefreshing()
                 self.tableView.reloadData()
+                print("Updated")
             }
         }
+    }
+    
+    @objc func refreshTable() {
+        fetchData()
+    }
+    
+    @objc func didTapSetting() {
+            
     }
 }
 
@@ -60,6 +90,8 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.identifier, for: indexPath) as! NewsTableViewCell
+        
+        
         
         let article = articles[indexPath.row]
         cell.configure(model: article,Source: article.source?["name"] as? String ?? "")
@@ -97,11 +129,10 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let article = articles[indexPath.row]
         
-        
-        guard let url = URL(string: article.url ?? "") else {return}
-        let vc = SFSafariViewController(url: url)
-        present(vc, animated: true)
-        
+        let vc = NewsDetailsViewController(article: article,source: article.source?["name"] as? String ?? "")
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

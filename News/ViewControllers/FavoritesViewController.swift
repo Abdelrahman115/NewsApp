@@ -16,17 +16,11 @@ class FavoritesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
-        //RealmManager.shared.deleteAll()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         loadDatafromRealm()
         tableView.reloadData()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
     }
 
     
@@ -54,8 +48,6 @@ class FavoritesViewController: UIViewController {
             placeHolderLabel.isHidden = true
         }
     }
-    
-
 }
 
 
@@ -94,7 +86,11 @@ extension FavoritesViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let savedArticle = favArticlesArray[indexPath.row]
+        let article = Article(author: savedArticle.author, content: savedArticle.content, description: savedArticle.articleDescription, publishedAt: savedArticle.publishedAt, source: nil, title: savedArticle.title, url: savedArticle.url, urlToImage: savedArticle.urlToImage)
+        let vc = NewsDetailsViewController(article: article,source: savedArticle.source)
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     
