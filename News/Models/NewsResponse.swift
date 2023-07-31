@@ -20,7 +20,7 @@ struct Article:Codable{
     let content:String?
     let description:String?
     let publishedAt:String?
-    let source:[String:String?]
+    let source:[String:String?]?
     let title:String?
     let url:String?
     let urlToImage:String?

@@ -13,11 +13,17 @@ class NewsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var viewModel:FetchNews!
     var articles:[Article] = []
+    var savedTitle:String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         fetchData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     
@@ -27,7 +33,6 @@ class NewsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: NewsTableViewCell.identifier)
-        
     }
 
     
@@ -43,7 +48,6 @@ class NewsViewController: UIViewController {
             }
         }
     }
-
 }
 
 
@@ -58,14 +62,41 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsTableViewCell.identifier, for: indexPath) as! NewsTableViewCell
         
         let article = articles[indexPath.row]
-        cell.configure(model: article)
-        cell.delegate = self
+        cell.configure(model: article,Source: article.source?["name"] as? String ?? "")
         
+        
+        let savedArticles = RealmManager.shared.getObject(title: article.title ?? "")
+        for each in savedArticles{
+            savedTitle = each.title ?? ""
+        }
+        if savedTitle == article.title{
+            cell.likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            cell.exist = true
+        }else{
+            cell.likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            cell.exist = false
+        }
+        self.savedTitle = ""
+        
+        let obj = RealmManager.shared.createObject(article: article)
+        
+        cell.bindAddToFavoritesView = { [weak self] in
+            guard let _ = self else {return}
+            RealmManager.shared.add(object: obj)
+            print("Object saved to realm")
+        }
+        
+        cell.bindDeleteToFavoritesView = { [weak self] in
+            guard let _ = self else {return}
+            RealmManager.shared.deleteDatafromFavorites(title: article.title ?? "")
+            print("Object deleted from realm")
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let article = articles[indexPath.row]
+        
         
         guard let url = URL(string: article.url ?? "") else {return}
         let vc = SFSafariViewController(url: url)
@@ -76,14 +107,8 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 340
     }
-    
-    
 }
 
 
-extension NewsViewController:NewsTableViewCellDelegate{
-    func playerControlsViewDidTabLikeButton(_ newsTableViewCell: NewsTableViewCell, exist: Bool) {
-        print("Like")
-    }
-}
+
 

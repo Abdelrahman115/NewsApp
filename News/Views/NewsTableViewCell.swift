@@ -8,16 +8,14 @@
 import UIKit
 import Kingfisher
 
-protocol NewsTableViewCellDelegate:AnyObject{
-    func playerControlsViewDidTabLikeButton(_ newsTableViewCell:NewsTableViewCell,exist:Bool)
-}
-
 
 class NewsTableViewCell: UITableViewCell {
     
     static let identifier = "NewsTableViewCell"
     var exist = false
-    weak var delegate:NewsTableViewCellDelegate?
+    
+    var bindDeleteToFavoritesView:(() -> ())?
+    var bindAddToFavoritesView:(() -> ())?
     
     let title:UILabel = {
        let label = UILabel()
@@ -55,7 +53,8 @@ class NewsTableViewCell: UITableViewCell {
     
     let likeButton:UIButton = {
        let button = UIButton()
-        button.setImage(UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)), for: .normal)
+        //button.setImage(UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)), for: .normal)
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.tintColor = .label
         button.layer.cornerRadius = 25
         button.layer.masksToBounds = true
@@ -98,10 +97,10 @@ class NewsTableViewCell: UITableViewCell {
     }
     
     
-    public func configure(model:Article){
+    public func configure(model:Article,Source:String?){
         title.text = model.title
         articleDesription.text = model.description
-        source.text = model.source["name"] as? String ?? ""
+        source.text = Source ?? ""
         publishDate.text = model.publishedAt
         let imageUrl = URL(string: model.urlToImage ?? "" )
         newsImageView.kf.setImage(with: imageUrl)
@@ -112,16 +111,14 @@ class NewsTableViewCell: UITableViewCell {
     
     @objc func didTapLikeButton(){
         if exist{
-            likeButton.setImage(UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)), for: .normal)
-            
-           
-       }else{
-           
-           likeButton.setImage(UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)), for: .normal)
+            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            bindDeleteToFavoritesView!()
+        }else{
+           likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
            likeButton.tintColor = .label
+           bindAddToFavoritesView!()
            
        }
-        delegate?.playerControlsViewDidTabLikeButton(self,exist: exist)
         exist = !exist
     }
     
