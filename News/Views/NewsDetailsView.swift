@@ -15,9 +15,10 @@ protocol NewsDetailsViewDelegate:AnyObject{
 }
 
 class NewsDetailsView: UIView {
-    
+    ///Properties
     weak var delegate:NewsDetailsViewDelegate?
 
+    ///View elements
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -104,16 +105,17 @@ class NewsDetailsView: UIView {
        }()
     
     private let continueReadingButton: UIButton = {
-           let button = UIButton()
-           button.translatesAutoresizingMaskIntoConstraints = false
-           button.setTitle("Continue Reading", for: .normal)
-           button.setTitleColor(.systemRed, for: .normal)
-           button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Continue Reading", for: .normal)
+        button.setTitleColor(.systemRed, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(continueReadingButtonTapped), for: .touchUpInside)
-       // button.addTarget(NewsDetailsView.self, action: #selector(continueReadingButtonTapped), for: .touchUpInside)
-           return button
+      
+        return button
        }()
     
+    ///Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -124,6 +126,8 @@ class NewsDetailsView: UIView {
         setupUI()
     }
     
+    
+    ///Add subViews
     private func setupUI() {
         backgroundColor = .systemBackground
         addSubview(scrollView)
@@ -152,28 +156,28 @@ class NewsDetailsView: UIView {
                     contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
                     contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
                     
-                    titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-                    titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                    titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                    titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -30),
+                    titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+                    titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
                     
-                    imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
-                    imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant:  10),
-                    imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant:  -10),
+                    imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+                    imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant:  15),
+                    imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant:  -15),
                     imageView.heightAnchor.constraint(equalToConstant: 200),
                     
-                    authorLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-                    authorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                    authorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                    authorLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+                    authorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+                    authorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
                     
                     sourceLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 8),
-                    sourceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                    sourceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                    sourceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+                    sourceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
                     
                     publishedAtLabel.topAnchor.constraint(equalTo: sourceLabel.bottomAnchor, constant: 8),
-                    publishedAtLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                    publishedAtLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                    publishedAtLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+                    publishedAtLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
                     
-                    lineSeparator1.topAnchor.constraint(equalTo: publishedAtLabel.bottomAnchor, constant: 8),
+                    lineSeparator1.topAnchor.constraint(equalTo: publishedAtLabel.bottomAnchor, constant: 20),
                     lineSeparator1.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
                     lineSeparator1.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
                     lineSeparator1.heightAnchor.constraint(equalToConstant: 1),
@@ -197,7 +201,8 @@ class NewsDetailsView: UIView {
                 ])
     }
     
-    // Public method to set the data for the news details view
+    
+    /// Public method to set the data for the news details view
     func configure(with article: Article, source:String) {
         titleLabel.text = article.title
         authorLabel.text = "By \(article.author ?? "Unknown")"
@@ -210,6 +215,7 @@ class NewsDetailsView: UIView {
         publishedAtLabel.text = "Published at: \(article.publishedAt ?? "")"
     }
     
+    ///Continue reading button functionality
     @objc private func continueReadingButtonTapped() {
         delegate?.didTapContinueReading(self)
     }

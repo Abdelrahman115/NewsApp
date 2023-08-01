@@ -8,12 +8,19 @@
 import Foundation
 
 class FetchNews{
-    //static var news:[NewsResponse] = []
+    
     var bindNews:(() -> ()) = {}
+    var bindErrors:(() -> ()) = {}
     
     var newHeadlines:NewsResponse?{
         didSet{
             bindNews()
+        }
+    }
+    
+    var error:Error?{
+        didSet{
+            bindErrors()
         }
     }
     
@@ -24,6 +31,7 @@ class FetchNews{
             case.success(let model):
                 self.newHeadlines = model
             case .failure(let error):
+                self.error = error
                 print(error.localizedDescription)
             }
         }
@@ -36,10 +44,9 @@ class FetchNews{
             case.success(let model):
                 self.newHeadlines = model
             case .failure(let error):
+                self.error = error
                 print(error.localizedDescription)
             }
         }
     }
-    
-    
 }

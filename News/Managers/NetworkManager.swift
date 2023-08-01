@@ -13,22 +13,17 @@ final class NetworkManager{
     
     let baseURL = "https://newsapi.org/v2/"
     let topHeadlines = "top-headlines?"
-    let country = Locale.current.regionCode?.lowercased()
+    let country = Locale.current.language.region?.identifier.lowercased()
     let apiKey = "101ac9e39bea48e887c26e2592877769"
-    
     let everyThing = "everything?"
     let sortKey = "popularity"
     
-    
-
     
     enum APIError:Error{
         case failedToGetData
     }
     
     private init() {}
-    
-    
     
     
     public func getTopNews(completion:@escaping(Result<NewsResponse, Error>) -> Void){
@@ -55,6 +50,7 @@ final class NetworkManager{
         task.resume()
     }
     
+    
     public func search(q:String,completion:@escaping(Result<NewsResponse,Error>) -> Void){
         guard !q.trimmingCharacters(in: .whitespaces).isEmpty else{return}
         
@@ -80,8 +76,7 @@ final class NetworkManager{
             
         }
         task.resume()
-        
     }
     
-    
+  
 }

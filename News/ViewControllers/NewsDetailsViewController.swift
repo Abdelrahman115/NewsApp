@@ -10,13 +10,12 @@ import SafariServices
 
 class NewsDetailsViewController: UIViewController {
 
-    
-
+    ///Properties
     private let article:Article
     private var source:String = ""
     private var newsDetailsView: NewsDetailsView!
     
-    
+    ///Initializer
     init(article:Article,source:String){
         self.article = article
         self.source = source
@@ -29,13 +28,14 @@ class NewsDetailsViewController: UIViewController {
     
    
     
-    
+    ///View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setuoUI()
         configureWithData()
     }
     
+    ///SetupUI of the view
     private func setuoUI(){
         // Instantiate the custom NewsDetailsView
         navigationItem.leftBarButtonItem?.tintColor = UIColor.red
@@ -53,6 +53,8 @@ class NewsDetailsViewController: UIViewController {
         newsDetailsView.delegate = self
     }
     
+    
+    ///Configure data with article object
     private func configureWithData(){
         newsDetailsView.configure(with: article,source: source)
     }
@@ -60,6 +62,8 @@ class NewsDetailsViewController: UIViewController {
     
 }
 
+
+///Delegate of continue reading button
 extension NewsDetailsViewController:NewsDetailsViewDelegate{
     func didTapContinueReading(_ NewsDetailsView: NewsDetailsView) {
         
@@ -67,6 +71,4 @@ extension NewsDetailsViewController:NewsDetailsViewDelegate{
         let vc = SFSafariViewController(url: url)
         present(vc, animated: true)
     }
-    
-    
 }

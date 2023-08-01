@@ -13,7 +13,6 @@ import RealmSwift
 
 class RealmManager {
     static let shared = RealmManager()
-    
     private let realm: Realm
     
     private init() {
@@ -23,6 +22,7 @@ class RealmManager {
             fatalError("Failed to initialize Realm: \(error.localizedDescription)")
         }
     }
+    
     
     func createArticleToRealmFavoritesObject(article:Article) -> ArticleToRealmFavorites{
         let obj = ArticleToRealmFavorites()
@@ -34,23 +34,22 @@ class RealmManager {
         obj.title = article.title
         obj.url = article.url
         obj.urlToImage = article.urlToImage
-        
         return obj
     }
     
-    func createArticleToRealmCashedObject(article:Article) -> ArticleToRealmCashed{
+    func createArticleToRealmCashedObject(article:Article,source:String) -> ArticleToRealmCashed{
         let obj = ArticleToRealmCashed()
         obj.author = article.author
         obj.content = article.content
         obj.articleDescription = article.description
         obj.publishedAt = article.publishedAt
-        obj.source = article.source?["name"] as? String ?? ""
+        obj.source = source
         obj.title = article.title
         obj.url = article.url
         obj.urlToImage = article.urlToImage
-        
         return obj
     }
+    
     
     func add(object: Object) {
         do {
@@ -62,6 +61,7 @@ class RealmManager {
         }
     }
     
+    
     func delete(object: Object) {
         do {
             try realm.write {
@@ -72,9 +72,7 @@ class RealmManager {
         }
     }
     
-    /*func getAllObjects(){
-        
-    }*/
+
     
     func deleteDatafromFavorites(title:String){
         let delProduct = try! Realm().objects(ArticleToRealmFavorites.self).filter("title == %@",title)
@@ -100,9 +98,6 @@ class RealmManager {
         return realm.objects(type)
     }
     
-    /*func getObject<T: Object>(_ type: T.Type, primaryKey: Any) -> T? {
-        return realm.object(ofType: type, forPrimaryKey: primaryKey)
-    }*/
     
     func deleteAll() {
         let realm = try! Realm()

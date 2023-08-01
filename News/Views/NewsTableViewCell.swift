@@ -11,12 +11,13 @@ import Kingfisher
 
 class NewsTableViewCell: UITableViewCell {
     
+    ///Properties
     static let identifier = "NewsTableViewCell"
     var exist = false
-    
     var bindDeleteToFavoritesView:(() -> ())?
     var bindAddToFavoritesView:(() -> ())?
     
+    ///View elements
     let title:UILabel = {
        let label = UILabel()
         label.font = .systemFont(ofSize: 20,weight: .medium)
@@ -62,7 +63,7 @@ class NewsTableViewCell: UITableViewCell {
     }()
     
     
-
+    ///Initializer
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(title)
@@ -81,22 +82,22 @@ class NewsTableViewCell: UITableViewCell {
     
     
     
-    
+    ///Load subViews
     override func layoutSubviews() {
         super.layoutSubviews()
-        newsImageView.frame = CGRect(x: 10, y: 5, width: contentView.frame.width - 20, height: 200)
-        title.frame = CGRect(x: 10, y: 205, width: contentView.frame.size.width - 20, height: 80)
+        newsImageView.frame = CGRect(x: 10, y: 15, width: contentView.frame.width - 20, height: 200)
+        title.frame = CGRect(x: 10, y: 220, width: contentView.frame.size.width - 20, height: 80)
         //articleDesription.frame = CGRect(x: 10, y: contentView.frame.height - title.bounds.height, width: 200, height: 50)
-        source.frame = CGRect(x: 10, y: 280, width: 100, height: 50)
-        publishDate.frame = CGRect(x: 120, y: 280, width: 200, height: 50)
-        likeButton.frame = CGRect(x: contentView.frame.width - 60, y: 280, width: 50, height: 50)
+        source.frame = CGRect(x: 10, y: 290, width: 150, height: 50)
+        publishDate.frame = CGRect(x: 160, y: 290, width: 200, height: 50)
+        likeButton.frame = CGRect(x: contentView.frame.width - 60, y: 290, width: 50, height: 50)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
     }
     
-    
+    ///Configure with data
     public func configure(model:Article,Source:String?){
         title.text = model.title
         articleDesription.text = model.description
@@ -104,15 +105,13 @@ class NewsTableViewCell: UITableViewCell {
         publishDate.text = model.publishedAt
         let imageUrl = URL(string: model.urlToImage ?? "" )
         newsImageView.kf.setImage(with: imageUrl,placeholder: UIImage(named: "noImage"))
-        
-        //cell..kf.setImage(with: brandImageUrl)
     }
     
-    
+    ///Like Button Functionality
     @objc func didTapLikeButton(){
         if exist{
             likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-            likeButton.tintColor = .systemRed
+            likeButton.tintColor = .label
             bindDeleteToFavoritesView!()
         }else{
            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
