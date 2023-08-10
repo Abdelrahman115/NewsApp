@@ -232,6 +232,7 @@ extension NewsViewController:UITableViewDelegate,UITableViewDataSource{
             print("Object saved to realm")
         }
         
+        //Remove Favorites
         cell.bindDeleteToFavoritesView = { [weak self] in
             guard let _ = self else {return}
             //let obj = RealmManager.shared.createArticleToRealmFavoritesObject(article: article)

@@ -66,7 +66,6 @@ class NewsDetailsViewController: UIViewController {
 ///Delegate of continue reading button
 extension NewsDetailsViewController:NewsDetailsViewDelegate{
     func didTapContinueReading(_ NewsDetailsView: NewsDetailsView) {
-        
         guard let url = URL(string: article.url ?? "") else {return}
         let vc = SFSafariViewController(url: url)
         present(vc, animated: true)

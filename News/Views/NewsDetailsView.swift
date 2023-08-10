@@ -205,7 +205,7 @@ class NewsDetailsView: UIView {
     /// Public method to set the data for the news details view
     func configure(with article: Article, source:String) {
         titleLabel.text = article.title
-        authorLabel.text = "By \(article.author ?? "Unknown")"
+        authorLabel.text = "By: \(article.author ?? "Unknown")"
         descriptionLabel.text = article.description
         contentLabel.text = article.content
         let imageUrl = URL(string: article.urlToImage ?? "" )

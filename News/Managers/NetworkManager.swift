@@ -52,9 +52,9 @@ final class NetworkManager{
     
     
     public func search(q:String,completion:@escaping(Result<NewsResponse,Error>) -> Void){
-        guard !q.trimmingCharacters(in: .whitespaces).isEmpty else{return}
         
-        let urlString = baseURL + everyThing + "q=\(q)" + "&sortedBy=\(sortKey)"+"&apikey=\(apiKey)"
+        let editedQuery = q.replacingOccurrences(of: " ", with: "+")
+        let urlString = baseURL + everyThing + "q=\(editedQuery)" + "&sortedBy=\(sortKey)"+"&apikey=\(apiKey)"
         
         
         let url = URL(string: urlString)
