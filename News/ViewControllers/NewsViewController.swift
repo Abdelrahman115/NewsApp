@@ -17,6 +17,8 @@ class NewsViewController: UIViewController {
     ///Properties
     let reachability = try! Reachability()
     private let searchVC = UISearchController(searchResultsController: nil)
+    
+    
     var viewModel:FetchNews!
     var articles:[Article] = []
     var savedTitle:String = ""
